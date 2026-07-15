@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Programa de Treinamento em Segurança na Ressonância Magnética</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.4/chart.umd.min.js"></script>
+<style>
+  :root{
+    --navy-dark:#0a2a6b;
+    --navy:#153a86;
+    --navy-2:#16337a;
+    --teal:#18b7a6;
+    --teal-light:#5fd7c8;
+    --orange:#f0883e;
+    --green:#1fa763;
+    --bg:#eef1f7;
+    --card:#ffffff;
+    --text:#1c2b45;
+    --muted:#6b7686;
+    --border:#e1e6ef;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; font-family:'Segoe UI',Arial,sans-serif; background:var(--bg); color:var(--text);
+  }
+  [contenteditable="true"]{
+    border-radius:4px; outline-offset:2px; transition:background .15s;
+  }
+  [contenteditable="true"]:hover{ background:rgba(24,183,166,.08); }
+  [contenteditable="true"]:focus{ background:rgba(24,183,166,.15); outline:1px dashed var(--teal); }
+
+  header.top{
+    background:linear-gradient(120deg,var(--navy-dark),var(--navy));
+    color:#fff; padding:18px 26px; display:flex; align-items:center; gap:18px; flex-wrap:wrap;
+  }
+  header.top .logo{
+    width:46px;height:46px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;flex:none;
+  }
+  header.top .logo svg{width:26px;height:26px;}
+  header.top .titles{flex:1; min-width:280px;}
+  header.top h1{margin:0; font-size:19px; letter-spacing:.5px;}
+  header.top h2{margin:2px 0 0; font-size:12px; font-weight:400; opacity:.85;}
+  header.top .datebox{
+    background:rgba(255,255,255,.12); border-radius:8px; padding:8px 14px; font-size:11px; display:flex; gap:8px; align-items:center;
+  }
+
+  .toolbar{
+    display:flex; gap:10px; flex-wrap:wrap; padding:10px 26px; background:#fff; border-bottom:1px solid var(--border); position:sticky; top:0; z-index:20;
+  }
+  .toolbar button{
+    background:var(--navy); color:#fff; border:none; padding:8px 14px; border-radius:6px; font-size:12.5px; cursor:pointer;
+  }
+  .toolbar button.secondary{ background:#fff; color:var(--navy); border:1px solid var(--navy); }
+  .toolbar button:hover{ opacity:.85; }
+  .toolbar .hint{ font-size:12px; color:var(--muted); align-self:center; margin-left:auto;}
+
+  main{ padding:20px 26px 60px; max-width:1500px; margin:0 auto; }
+
+  .kpi-row{ display:grid; grid-template-columns:repeat(6,1fr); gap:14px; margin-bottom:16px; }
+  @media(max-width:1100px){ .kpi-row{grid-template-columns:repeat(3,1fr);} }
+  @media(max-width:640px){ .kpi-row{grid-template-columns:repeat(2,1fr);} }
+
+  .card{ background:var(--card); border-radius:12px; box-shadow:0 2px 10px rgba(20,30,60,.08); padding:16px; }
+  .kpi{ display:flex; flex-direction:column; gap:8px; }
+  .kpi .icon{ width:36px;height:36px;border-radius:50%; display:flex;align-items:center;justify-content:center; }
+  .kpi .icon svg{width:20px;height:20px;}
+  .kpi .label-top{ font-size:11px; color:var(--muted); font-weight:600; text-transform:uppercase; letter-spacing:.3px;}
+  .kpi .value{ font-size:26px; font-weight:700; color:var(--navy-dark);}
+  .kpi .sub{ font-size:11px; color:var(--muted); }
+
+  .growth-box{ background:linear-gradient(120deg,var(--navy-dark),var(--navy)); color:#fff; border-radius:12px; padding:14px 16px; margin-bottom:18px; }
+  .growth-box h3{ margin:0 0 10px; font-size:13px; letter-spacing:.4px; background:rgba(255,255,255,.12); display:inline-block; padding:5px 12px; border-radius:6px;}
+  .growth-flex{ display:flex; gap:26px; flex-wrap:wrap; }
+  .growth-item{ flex:1; min-width:200px; }
+  .growth-item .period{ font-size:11px; opacity:.75; margin-bottom:4px;}
+  .growth-item .pct{ font-size:22px; font-weight:700; color:var(--teal-light);}
+  .growth-item .desc{ font-size:11px; opacity:.85; }
+
+  .grid3{ display:grid; grid-template-columns:1.1fr 1.1fr .9fr; gap:16px; margin-bottom:18px; }
+  .grid2b{ display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:18px; }
+  .grid-cat{ display:grid; grid-template-columns:1.3fr 1fr .5fr; gap:16px; margin-bottom:18px; }
+  @media(max-width:1000px){ .grid3, .grid2b, .grid-cat{ grid-template-columns:1fr; } }
+
+  .section-title{ font-size:13px; font-weight:700; color:var(--navy-dark); margin:0 0 10px; text-transform:uppercase; letter-spacing:.3px;}
+  .chart-wrap{ position:relative; height:230px; }
+  .chart-wrap.tall{ height:280px; }
+
+  .edit-toggle{ float:right; font-size:11px; background:none; border:1px solid var(--border); color:var(--navy); border-radius:5px; padding:3px 8px; cursor:pointer;}
+  .edit-panel{ display:none; margin-top:12px; border-top:1px dashed var(--border); padding-top:10px; }
+  .edit-panel.show{ display:block; }
+  .edit-panel table{ width:100%; border-collapse:collapse; font-size:12px;}
+  .edit-panel th{ text-align:left; color:var(--muted); font-weight:600; padding:4px 4px;}
+  .edit-panel td{ padding:3px 4px; }
+  .edit-panel input[type=text], .edit-panel input[type=number]{
+    width:100%; padding:4px 6px; border:1px solid var(--border); border-radius:4px; font-size:12px;
+  }
+  .edit-panel .rm-row{ background:#fdecec; color:#c0392b; border:1px solid #f0c4c4; border-radius:4px; cursor:pointer; padding:2px 8px; font-size:11px;}
+  .edit-panel .add-row{ margin-top:8px; background:var(--teal); color:#fff; border:none; padding:5px 12px; border-radius:5px; font-size:12px; cursor:pointer;}
+
+  .total-box{ position:absolute; right:8px; bottom:10px; background:#f2f6ee; border:1px solid #dfe8d6; border-radius:8px; padding:8px 10px; font-size:11px; max-width:150px; text-align:center; color:#3b5b2c;}
+  .total-box b{ display:block; font-size:15px; }
+
+  .donut-legend{ display:flex; flex-direction:column; gap:16px; justify-content:center; height:100%; }
+  .donut-legend .item{ display:flex; align-items:center; gap:10px; }
+  .donut-legend .dot{ width:12px;height:12px;border-radius:50%; flex:none; }
+  .donut-legend .num{ font-size:20px; font-weight:700; }
+  .donut-legend .lab{ font-size:11px; color:var(--muted); text-transform:uppercase; }
+  .donut-total{ text-align:center; margin-bottom:14px; }
+  .donut-total .n{ font-size:24px; font-weight:700; color:var(--navy-dark); }
+  .donut-total .l{ font-size:11px; color:var(--muted); }
+  .donut-flex{ display:flex; gap:14px; align-items:center; height:100%;}
+  .donut-flex .chart-wrap{ flex:1; height:180px;}
+
+  .cat-badge{ display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; background:#eef4fb; border:1px solid #d6e4f6; border-radius:12px; height:100%; padding:16px 10px; gap:6px;}
+  .cat-badge .num{ font-size:28px; font-weight:800; color:var(--navy);}
+  .cat-badge .lab{ font-size:12px; color:var(--navy-dark); font-weight:600;}
+
+  /* Units */
+  .units-grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(90px,1fr)); gap:10px; margin-top:6px; }
+  .unit-item{ display:flex; flex-direction:column; align-items:center; gap:4px; font-size:11px; text-align:center; position:relative;}
+  .unit-item svg{width:26px;height:26px;}
+  .unit-item .check{ color:var(--green); font-size:13px; }
+  .unit-item .rm-x{ position:absolute; top:-6px; right:6px; background:#fdecec; color:#c0392b; border-radius:50%; width:16px; height:16px; font-size:10px; line-height:16px; text-align:center; cursor:pointer; border:1px solid #f0c4c4; }
+  .units-footer{ margin-top:14px; background:linear-gradient(120deg,var(--navy-dark),var(--navy)); color:#fff; text-align:center; padding:9px; border-radius:8px; font-size:13px; font-weight:600; letter-spacing:.4px; }
+
+  /* Timeline */
+  .timeline{ display:grid; grid-template-columns:repeat(3,1fr); gap:18px; margin-top:10px; }
+  @media(max-width:800px){ .timeline{ grid-template-columns:1fr; } }
+  .tl-col{ border-top:4px solid var(--border); padding-top:10px; position:relative;}
+  .tl-col.y2024{ border-color:#33415c; }
+  .tl-col.y2025{ border-color:var(--green); }
+  .tl-col.y2026{ border-color:var(--teal); }
+  .tl-year{ font-weight:800; font-size:15px; margin-bottom:8px; }
+  .tl-col.y2024 .tl-year{ color:#33415c; }
+  .tl-col.y2025 .tl-year{ color:var(--green); }
+  .tl-col.y2026 .tl-year{ color:var(--teal); }
+  .tl-col ul{ margin:0; padding-left:16px; font-size:12.5px; line-height:1.7; }
+  .tl-col li{ position:relative; }
+  .tl-add{ font-size:11px; background:none; border:1px dashed var(--border); color:var(--muted); border-radius:5px; padding:3px 8px; cursor:pointer; margin-top:6px;}
+  .li-x{ font-size:10px; color:#c0392b; cursor:pointer; margin-left:6px; }
+
+  /* Highlights */
+  .highlights{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:9px; }
+  .highlights li{ display:flex; align-items:flex-start; gap:8px; font-size:13px; }
+  .highlights li .tick{ color:var(--green); flex:none; margin-top:1px; }
+  .add-highlight{ margin-top:10px; font-size:11px; background:none; border:1px dashed var(--border); color:var(--muted); border-radius:5px; padding:4px 10px; cursor:pointer;}
+
+  footer.foot{ text-align:center; padding:18px; color:var(--muted); font-size:11.5px; background:#fff; border-top:1px solid var(--border); }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="logo">
+    <svg viewBox="0 0 24 24" fill="none"><path d="M12 2 L20 7 V17 L12 22 L4 17 V7 Z" stroke="#0a2a6b" stroke-width="2" fill="none"/><circle cx="12" cy="12" r="3" fill="#0a2a6b"/></svg>
+  </div>
+  <div class="titles">
+    <h1 contenteditable="true" data-key="hdr-title">PROGRAMA DE TREINAMENTO EM SEGURANÇA NA RESSONÂNCIA MAGNÉTICA</h1>
+    <h2 contenteditable="true" data-key="hdr-sub">EVOLUÇÃO DO PROGRAMA | 2024 A 1º SEMESTRE DE 2026</h2>
+  </div>
+  <div class="datebox">
+    <span>📅</span>
+    <span contenteditable="true" data-key="hdr-date">DADOS ATÉ<br>1º SEMESTRE/2026</span>
+  </div>
+</header>
+
+<div class="toolbar">
+  <button onclick="saveAll()">💾 Salvar alterações</button>
+  <button class="secondary" onclick="exportJSON()">⬇️ Exportar dados (JSON)</button>
+  <button class="secondary" onclick="document.getElementById('importFile').click()">⬆️ Importar dados</button>
+  <input type="file" id="importFile" accept="application/json" style="display:none" onchange="importJSON(event)">
+  <button class="secondary" onclick="if(confirm('Restaurar todos os dados para o padrão original?')) restoreDefaults()">↺ Restaurar padrão</button>
+  <span class="hint">Clique em qualquer texto para editar. Use "✏️ Editar dados" em cada gráfico para alterar os valores.</span>
+</div>
+
+<main>
+
+  <!-- KPI ROW -->
+  <div class="kpi-row">
+    <div class="card kpi">
+      <div class="icon" style="background:#e5edfb;"><svg viewBox="0 0 24 24" fill="none"><path d="M8 12a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm8 0a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM2 20c0-3 3-5 6-5s6 2 6 5M12 20c0-2.5 2.5-4.2 5-4.2s5 1.7 5 4.2" stroke="#153a86" stroke-width="1.6" stroke-linecap="round"/></svg></div>
+      <div class="label-top" contenteditable="true" data-key="kpi1-label">PROFISSIONAIS TREINADOS</div>
+      <div class="value" contenteditable="true" data-key="kpi1-value">3.387</div>
+      <div class="sub" contenteditable="true" data-key="kpi1-sub">Total no período</div>
+    </div>
+    <div class="card kpi">
+      <div class="icon" style="background:#e2f7ee;"><svg viewBox="0 0 24 24" fill="none"><path d="M4 21V6l6-3 6 3v15M14 21V11l6 2v8" stroke="#1fa763" stroke-width="1.6" stroke-linejoin="round"/><path d="M8 9h1M8 13h1M8 17h1M12 9h1M12 13h1M12 17h1" stroke="#1fa763" stroke-width="1.4"/></svg></div>
+      <div class="label-top" contenteditable="true" data-key="kpi2-label">UNIDADES TREINADAS</div>
+      <div class="value" contenteditable="true" data-key="kpi2-value">14</div>
+      <div class="sub" contenteditable="true" data-key="kpi2-sub">Total unidades atendidas</div>
+    </div>
+    <div class="card kpi">
+      <div class="icon" style="background:#efe9fb;"><svg viewBox="0 0 24 24" fill="none"><path d="M2 8 12 4l10 4-10 4L2 8Zm4 2v6c0 1.5 2.7 3 6 3s6-1.5 6-3v-6" stroke="#5b3ea8" stroke-width="1.6" stroke-linejoin="round"/></svg></div>
+      <div class="label-top" contenteditable="true" data-key="kpi3-label">TURMAS REALIZADAS</div>
+      <div class="value" contenteditable="true" data-key="kpi3-value">126</div>
+      <div class="sub" contenteditable="true" data-key="kpi3-sub">Turmas realizadas</div>
+    </div>
+    <div class="card kpi">
+      <div class="icon" style="background:#e5edfb;"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="#153a86" stroke-width="1.6"/><path d="M8 12.5l2.5 2.5L16 9.5" stroke="#153a86" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <div class="label-top" contenteditable="true" data-key="kpi4-label">APROVEITAMENTO MÉDIO (PÓS)</div>
+      <div class="value" contenteditable="true" data-key="kpi4-value">97%</div>
+      <div class="sub" contenteditable="true" data-key="kpi4-sub">Média geral do período</div>
+    </div>
+    <div class="card kpi">
+      <div class="icon" style="background:#e2f7ee;"><svg viewBox="0 0 24 24" fill="none"><path d="m12 3 2.2 4.6 5 .7-3.6 3.5.9 5-4.5-2.4-4.5 2.4.9-5-3.6-3.5 5-.7L12 3Z" stroke="#1fa763" stroke-width="1.5" stroke-linejoin="round"/></svg></div>
+      <div class="label-top" contenteditable="true" data-key="kpi5-label">1ª PARTICIPAÇÃO</div>
+      <div class="value" contenteditable="true" data-key="kpi5-value">2.791</div>
+      <div class="sub" contenteditable="true" data-key="kpi5-sub">82% do total</div>
+    </div>
+    <div class="card kpi">
+      <div class="icon" style="background:#fdece0;"><svg viewBox="0 0 24 24" fill="none"><path d="M3 7h6l2-2h4l2 2h4v12H3V7Z" stroke="#f0883e" stroke-width="1.6" stroke-linejoin="round"/></svg></div>
+      <div class="label-top" contenteditable="true" data-key="kpi6-label">CATEGORIAS PROFISSIONAIS</div>
+      <div class="value" contenteditable="true" data-key="kpi6-value">22+</div>
+      <div class="sub" contenteditable="true" data-key="kpi6-sub">Áreas alcançadas</div>
+    </div>
+  </div>
+
+  <!-- GROWTH BOX -->
+  <div class="growth-box">
+    <h3 contenteditable="true" data-key="growth-title">CRESCIMENTO DO PROGRAMA</h3>
+    <div class="growth-flex">
+      <div class="growth-item">
+        <div class="period" contenteditable="true" data-key="growth1-period">2024 → 2025</div>
+        <div class="pct">↑ <span contenteditable="true" data-key="growth1-pct">266%</span></div>
+        <div class="desc" contenteditable="true" data-key="growth1-desc">Crescimento no nº de treinados</div>
+      </div>
+      <div class="growth-item">
+        <div class="period" contenteditable="true" data-key="growth2-period">2025 → 1º sem/2026</div>
+        <div class="pct">↑ <span contenteditable="true" data-key="growth2-pct">79%</span></div>
+        <div class="desc" contenteditable="true" data-key="growth2-desc">do total de 2025 já alcançado em 6 meses</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ROW 1: bar / accumulated line / donut -->
+  <div class="grid3">
+    <div class="card">
+      <button class="edit-toggle" onclick="toggleEdit('c1')">✏️ Editar dados</button>
+      <div class="section-title" contenteditable="true" data-key="c1-title">Evolução do Número de Profissionais Treinados</div>
+      <div class="chart-wrap"><canvas id="chart1"></canvas></div>
+      <div class="edit-panel" id="edit-c1">
+        <table><thead><tr><th>Período</th><th>Pré-treinamento</th><th>Pós-treinamento</th><th></th></tr></thead>
+        <tbody id="rows-c1"></tbody></table>
+        <button class="add-row" onclick="addRowC1()">+ Adicionar período</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <button class="edit-toggle" onclick="toggleEdit('c2')">✏️ Editar dados</button>
+      <div class="section-title" contenteditable="true" data-key="c2-title">Evolução Acumulada de Profissionais Treinados (Pós)</div>
+      <div class="chart-wrap" style="position:relative;">
+        <canvas id="chart2"></canvas>
+        <div class="total-box"><span contenteditable="true" data-key="c2-boxtext"><b id="c2-total-display">3.387</b> profissionais treinados no período 2024 a 1º sem/2026</span></div>
+      </div>
+      <div class="edit-panel" id="edit-c2">
+        <table><thead><tr><th>Período</th><th>Acumulado</th><th></th></tr></thead>
+        <tbody id="rows-c2"></tbody></table>
+        <button class="add-row" onclick="addRowC2()">+ Adicionar período</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <button class="edit-toggle" onclick="toggleEdit('c3')">✏️ Editar dados</button>
+      <div class="section-title" contenteditable="true" data-key="c3-title">1ª Participação x Reciclagem</div>
+      <div class="donut-total"><div class="n" id="c3-total">Total 3.387</div></div>
+      <div class="donut-flex">
+        <div class="chart-wrap"><canvas id="chart3"></canvas></div>
+        <div class="donut-legend">
+          <div class="item"><span class="dot" style="background:var(--teal)"></span>
+            <div><div class="num" id="c3-part-num">2.791</div><div class="lab" contenteditable="true" data-key="c3-part-lab">1ª Participação (<span id="c3-part-pct">82%</span>)</div></div>
+          </div>
+          <div class="item"><span class="dot" style="background:var(--navy)"></span>
+            <div><div class="num" id="c3-recic-num">596</div><div class="lab" contenteditable="true" data-key="c3-recic-lab">Reciclagem (<span id="c3-recic-pct">18%</span>)</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="edit-panel" id="edit-c3">
+        <table><thead><tr><th>Categoria</th><th>Valor</th></tr></thead>
+        <tbody>
+          <tr><td>1ª Participação</td><td><input type="number" id="in-c3-part" oninput="updateC3()"></td></tr>
+          <tr><td>Reciclagem</td><td><input type="number" id="in-c3-recic" oninput="updateC3()"></td></tr>
+        </tbody></table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ROW 2: aproveitamento line / bars por semestre -->
+  <div class="grid2b">
+    <div class="card">
+      <button class="edit-toggle" onclick="toggleEdit('c4')">✏️ Editar dados</button>
+      <div class="section-title" contenteditable="true" data-key="c4-title">Evolução do Aproveitamento (Pós)</div>
+      <div class="chart-wrap"><canvas id="chart4"></canvas></div>
+      <div class="edit-panel" id="edit-c4">
+        <table><thead><tr><th>Período</th><th>Aproveitamento (%)</th><th></th></tr></thead>
+        <tbody id="rows-c4"></tbody></table>
+        <button class="add-row" onclick="addRowC4()">+ Adicionar período</button>
+      </div>
+    </div>
+    <div class="card">
+      <button class="edit-toggle" onclick="toggleEdit('c5')">✏️ Editar dados</button>
+      <div class="section-title" contenteditable="true" data-key="c5-title">Profissionais Treinados por Semestre (Pós)</div>
+      <div class="chart-wrap"><canvas id="chart5"></canvas></div>
+      <div class="edit-panel" id="edit-c5">
+        <table><thead><tr><th>Período</th><th>Valor</th><th></th></tr></thead>
+        <tbody id="rows-c5"></tbody></table>
+        <button class="add-row" onclick="addRowC5()">+ Adicionar período</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ROW 3: categorias -->
+  <div class="grid-cat">
+    <div class="card">
+      <button class="edit-toggle" onclick="toggleEdit('c6')">✏️ Editar dados</button>
+      <div class="section-title" contenteditable="true" data-key="c6-title">Público Alcançado por Categoria Profissional — 1º sem/2026 (Pós)</div>
+      <div class="chart-wrap tall"><canvas id="chart6"></canvas></div>
+      <div class="edit-panel" id="edit-c6">
+        <table><thead><tr><th>Categoria</th><th>Nº de profissionais</th><th></th></tr></thead>
+        <tbody id="rows-c6"></tbody></table>
+        <button class="add-row" onclick="addRowC6()">+ Adicionar categoria</button>
+      </div>
+    </div>
+    <div class="card">
+      <button class="edit-toggle" onclick="toggleEdit('c7')">✏️ Editar dados</button>
+      <div class="section-title" contenteditable="true" data-key="c7-title">Categorias Complementares</div>
+      <div class="chart-wrap tall"><canvas id="chart7"></canvas></div>
+      <div class="edit-panel" id="edit-c7">
+        <table><thead><tr><th>Categoria</th><th>Nº de profissionais</th><th></th></tr></thead>
+        <tbody id="rows-c7"></tbody></table>
+        <button class="add-row" onclick="addRowC7()">+ Adicionar categoria</button>
+      </div>
+    </div>
+    <div class="card cat-badge">
+      <div class="num" contenteditable="true" data-key="badge-num">22+</div>
+      <div class="lab" contenteditable="true" data-key="badge-lab">categorias profissionais alcançadas</div>
+    </div>
+  </div>
+
+  <!-- BOTTOM: unidades / timeline / destaques -->
+  <div class="grid3" style="grid-template-columns:1fr 1.1fr 1fr;">
+    <div class="card">
+      <div class="section-title" contenteditable="true" data-key="units-title">Unidades Treinadas</div>
+      <div class="units-grid" id="units-grid"></div>
+      <button class="tl-add" onclick="addUnit()">+ Adicionar unidade</button>
+      <div class="units-footer">
+        <span contenteditable="true" data-key="units-footer-num">14</span>
+        <span contenteditable="true" data-key="units-footer-lab"> UNIDADES TREINADAS</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="section-title" contenteditable="true" data-key="timeline-title">Linha do Tempo — Evolução do Programa</div>
+      <div class="timeline">
+        <div class="tl-col y2024">
+          <div class="tl-year">2024</div>
+          <ul id="tl-2024"></ul>
+          <button class="tl-add" onclick="addTL('2024')">+ item</button>
+        </div>
+        <div class="tl-col y2025">
+          <div class="tl-year">2025</div>
+          <ul id="tl-2025"></ul>
+          <button class="tl-add" onclick="addTL('2025')">+ item</button>
+        </div>
+        <div class="tl-col y2026">
+          <div class="tl-year">2026</div>
+          <ul id="tl-2026"></ul>
+          <button class="tl-add" onclick="addTL('2026')">+ item</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="section-title" contenteditable="true" data-key="highlights-title">Destaques do Programa</div>
+      <ul class="highlights" id="highlights-list"></ul>
+      <button class="add-highlight" onclick="addHighlight()">+ Adicionar destaque</button>
+    </div>
+  </div>
+
+</main>
+
+<footer class="foot" contenteditable="true" data-key="footer-text">Formação continuada · Segurança do paciente · Qualidade assistencial (edite este rodapé conforme necessário)</footer>
+
+<script>
+/* ---------------- Palette ---------------- */
+const NAVY = '#153a86', TEAL='#18b7a6';
+
+/* ---------------- Default state (from original report) ---------------- */
+const DEFAULTS = {
+  c1: { labels:['2024 1º SEMESTRE','2024 2º SEMESTRE','2025 1º SEMESTRE','2025 2º SEMESTRE','2026 1º SEMESTRE'],
+        pre:[100,371,786,834,1209], pos:[89,360,765,876,1297] },
+  c2: { labels:['2024 1º SEM','2024 2º SEM','2025 1º SEM','2025 2º SEM','2026 1º SEM'],
+        data:[89,449,1214,2090,3387] },
+  c3: { part:2791, recic:596 },
+  c4: { labels:['2024 1º SEM','2024 2º SEM','2025 1º SEM','2025 2º SEM','2026 1º SEM'],
+        data:[95,97,97,98,99] },
+  c5: { labels:['2024 1º SEM','2024 2º SEM','2025 1º SEM','2025 2º SEM','2026 1º SEM'],
+        data:[89,360,765,876,1297] },
+  c6: { labels:['Higiene / Facilities','Técnico de Enfermagem','Administrativo','Enfermeiros','Manutenção','Coleta / Laboratório','Biomédicos (RM)','Médicos Anestesistas','Ultrassom'],
+        data:[289,162,130,114,101,45,49,47,42] },
+  c7: { labels:['Segurança Patrimonial','Ressonância Magnética','RX','Tomografia','Empresas Terceirizadas','Transporte','Bombeiros','Outros (diversas áreas)'],
+        data:[33,32,25,21,21,20,18,77] },
+  units: Array.from({length:14},(_,i)=>'Unidade '+(i+1)),
+  timeline: {
+    '2024':['Implementação do programa','Padronização dos conteúdos','Avaliação pré e pós','Primeiras unidades'],
+    '2025':['Expansão institucional','Inclusão de novas áreas','Reorientações individuais','Novas categorias e funções','Fortalecimento das barreiras'],
+    '2026':['Novas estratégias','Atualização contínua','Ampliação das áreas','Mais participação das equipes','Cultura de segurança fortalecida']
+  },
+  highlights: [
+    'Crescimento contínuo do número de profissionais capacitados',
+    'Ampliação das unidades e das categorias profissionais',
+    'Melhoria contínua do conhecimento e dos processos',
+    'Fortalecimento da cultura de segurança em RM',
+    'Integração com auditorias: JCI, CBA, PADI, RDC 611, IN 97',
+    'Reorientações individualizadas e novas barreiras de segurança'
+  ]
+};
+
+const STORAGE_KEY = 'rm_dashboard_state_v1';
+const TEXT_KEY = 'rm_dashboard_text_v1';
+let state = JSON.parse(JSON.stringify(DEFAULTS));
+
+function loadState(){
+  try{
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if(saved) state = JSON.parse(saved);
+  }catch(e){ console.warn('Falha ao carregar estado salvo', e); }
+}
+loadState();
+
+function persist(){
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+}
+
+/* ---------------- Charts ---------------- */
+let chart1, chart2, chart3, chart4, chart5, chart6, chart7;
+
+function initCharts(){
+  chart1 = new Chart(document.getElementById('chart1'), {
+    type:'bar',
+    data:{ labels: state.c1.labels.map(l=>l.split(' ')), datasets:[
+      {label:'Pré-treinamento', data:state.c1.pre, backgroundColor:NAVY, borderRadius:3},
+      {label:'Pós-treinamento', data:state.c1.pos, backgroundColor:TEAL, borderRadius:3}
+    ]},
+    options: baseOpts({legendTop:true})
+  });
+
+  chart2 = new Chart(document.getElementById('chart2'), {
+    type:'line',
+    data:{ labels: state.c2.labels, datasets:[
+      { label:'Acumulado', data: state.c2.data, borderColor:'#5b8c3a', backgroundColor:'rgba(150,190,110,.15)', fill:true, tension:.3, pointBackgroundColor:'#5b8c3a' }
+    ]},
+    options: baseOpts({legendTop:false})
+  });
+
+  chart3 = new Chart(document.getElementById('chart3'), {
+    type:'doughnut',
+    data:{ labels:['1ª Participação','Reciclagem'], datasets:[{ data:[state.c3.part, state.c3.recic], backgroundColor:[TEAL, NAVY], borderWidth:0 }]},
+    options:{ responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}} }
+  });
+
+  chart4 = new Chart(document.getElementById('chart4'), {
+    type:'line',
+    data:{ labels: state.c4.labels, datasets:[
+      { label:'Aproveitamento %', data: state.c4.data, borderColor:TEAL, backgroundColor:'rgba(24,183,166,.15)', fill:false, tension:.3, pointBackgroundColor:TEAL }
+    ]},
+    options: baseOpts({legendTop:false, suggestedMin:60, suggestedMax:110, percent:true})
+  });
+
+  chart5 = new Chart(document.getElementById('chart5'), {
+    type:'bar',
+    data:{ labels: state.c5.labels, datasets:[{ label:'Profissionais', data: state.c5.data, backgroundColor:TEAL, borderRadius:3 }]},
+    options: baseOpts({legendTop:false})
+  });
+
+  chart6 = new Chart(document.getElementById('chart6'), {
+    type:'bar',
+    data:{ labels: state.c6.labels, datasets:[{ label:'Profissionais', data: state.c6.data, backgroundColor:NAVY, borderRadius:3 }]},
+    options: horizOpts()
+  });
+
+  chart7 = new Chart(document.getElementById('chart7'), {
+    type:'bar',
+    data:{ labels: state.c7.labels, datasets:[{ label:'Profissionais', data: state.c7.data, backgroundColor:NAVY, borderRadius:3 }]},
+    options: horizOpts()
+  });
+
+  updateC3Legend();
+  document.getElementById('c2-total-display').innerText = formatBR(state.c2.data[state.c2.data.length-1]);
+}
+
+function baseOpts({legendTop=false, suggestedMin, suggestedMax, percent=false}={}){
+  return {
+    responsive:true, maintainAspectRatio:false,
+    plugins:{ legend:{ display:legendTop, position:'top', labels:{boxWidth:12,font:{size:10}} } },
+    scales:{
+      x:{ ticks:{font:{size:9}}, grid:{display:false} },
+      y:{ beginAtZero:true, suggestedMin, suggestedMax, ticks:{ font:{size:9}, callback:v=>percent? v+'%':v } }
+    }
+  };
+}
+function horizOpts(){
+  return {
+    indexAxis:'y', responsive:true, maintainAspectRatio:false,
+    plugins:{legend:{display:false}},
+    scales:{ x:{ beginAtZero:true, ticks:{font:{size:9}} }, y:{ ticks:{font:{size:10}} } }
+  };
+}
+function formatBR(n){ return Number(n).toLocaleString('pt-BR'); }
+
+/* ---------------- Edit panels ---------------- */
+function toggleEdit(key){
+  const panel = document.getElementById('edit-'+key);
+  panel.classList.toggle('show');
+  if(panel.classList.contains('show')) renderRows(key);
+}
+
+function renderRows(key){
+  if(key==='c1') return renderC1();
+  if(key==='c2') return renderC2();
+  if(key==='c3') return renderC3Inputs();
+  if(key==='c4') return renderC4();
+  if(key==='c5') return renderC5();
+  if(key==='c6') return renderC6();
+  if(key==='c7') return renderC7();
+}
+
+/* C1: grouped bar */
+function renderC1(){
+  const tbody = document.getElementById('rows-c1'); tbody.innerHTML='';
+  state.c1.labels.forEach((lab,i)=>{
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td><input type="text" value="${lab}" oninput="setC1(${i},'labels',this.value)"></td>
+      <td><input type="number" value="${state.c1.pre[i]}" oninput="setC1(${i},'pre',this.value)"></td>
+      <td><input type="number" value="${state.c1.pos[i]}" oninput="setC1(${i},'pos',this.value)"></td>
+      <td><button class="rm-row" onclick="removeRowC1(${i})">×</button></td>`;
+    tbody.appendChild(tr);
+  });
+}
+function setC1(i,field,val){
+  state.c1[field][i] = field==='labels'? val : Number(val);
+  chart1.data.labels = state.c1.labels.map(l=>l.split(' '));
+  chart1.data.datasets[0].data = state.c1.pre;
+  chart1.data.datasets[1].data = state.c1.pos;
+  chart1.update(); persist();
+}
+function addRowC1(){
+  state.c1.labels.push('Novo período'); state.c1.pre.push(0); state.c1.pos.push(0);
+  setC1(0,'labels',state.c1.labels[0]); renderC1(); persist();
+}
+function removeRowC1(i){
+  state.c1.labels.splice(i,1); state.c1.pre.splice(i,1); state.c1.pos.splice(i,1);
+  chart1.data.labels = state.c1.labels.map(l=>l.split(' '));
+  chart1.data.datasets[0].data = state.c1.pre;
+  chart1.data.datasets[1].data = state.c1.pos;
+  chart1.update(); renderC1(); persist();
+}
+
+/* C2: accumulated line */
+function renderC2(){
+  const tbody = document.getElementById('rows-c2'); tbody.innerHTML='';
+  state.c2.labels.forEach((lab,i)=>{
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td><input type="text" value="${lab}" oninput="setC2(${i},'labels',this.value)"></td>
+      <td><input type="number" value="${state.c2.data[i]}" oninput="setC2(${i},'data',this.value)"></td>
+      <td><button class="rm-row" onclick="removeRowC2(${i})">×</button></td>`;
+    tbody.appendChild(tr);
+  });
+}
+function setC2(i,field,val){
+  state.c2[field][i] = field==='labels'? val : Number(val);
+  chart2.data.labels = state.c2.labels;
+  chart2.data.datasets[0].data = state.c2.data;
+  chart2.update();
+  document.getElementById('c2-total-display').innerText = formatBR(state.c2.data[state.c2.data.length-1]);
+  persist();
+}
+function addRowC2(){
+  state.c2.labels.push('Novo período'); state.c2.data.push(0);
+  renderC2(); chart2.data.labels=state.c2.labels; chart2.data.datasets[0].data=state.c2.data; chart2.update(); persist();
+}
+function removeRowC2(i){
+  state.c2.labels.splice(i,1); state.c2.data.splice(i,1);
+  chart2.data.labels=state.c2.labels; chart2.data.datasets[0].data=state.c2.data; chart2.update();
+  document.getElementById('c2-total-display').innerText = formatBR(state.c2.data[state.c2.data.length-1]||0);
+  renderC2(); persist();
+}
+
+/* C3: donut */
+function renderC3Inputs(){
+  document.getElementById('in-c3-part').value = state.c3.part;
+  document.getElementById('in-c3-recic').value = state.c3.recic;
+}
+function updateC3(){
+  state.c3.part = Number(document.getElementById('in-c3-part').value)||0;
+  state.c3.recic = Number(document.getElementById('in-c3-recic').value)||0;
+  chart3.data.datasets[0].data = [state.c3.part, state.c3.recic];
+  chart3.update();
+  updateC3Legend(); persist();
+}
+function updateC3Legend(){
+  const total = state.c3.part + state.c3.recic;
+  document.getElementById('c3-total').innerText = 'Total ' + formatBR(total);
+  document.getElementById('c3-part-num').innerText = formatBR(state.c3.part);
+  document.getElementById('c3-recic-num').innerText = formatBR(state.c3.recic);
+  document.getElementById('c3-part-pct').innerText = (total? Math.round(state.c3.part/total*100):0) + '%';
+  document.getElementById('c3-recic-pct').innerText = (total? Math.round(state.c3.recic/total*100):0) + '%';
+}
+
+/* C4: aproveitamento */
+function renderC4(){
+  const tbody = document.getElementById('rows-c4'); tbody.innerHTML='';
+  state.c4.labels.forEach((lab,i)=>{
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td><input type="text" value="${lab}" oninput="setC4(${i},'labels',this.value)"></td>
+      <td><input type="number" value="${state.c4.data[i]}" oninput="setC4(${i},'data',this.value)"></td>
+      <td><button class="rm-row" onclick="removeRowC4(${i})">×</button></td>`;
+    tbody.appendChild(tr);
+  });
+}
+function setC4(i,field,val){
+  state.c4[field][i] = field==='labels'? val : Number(val);
+  chart4.data.labels = state.c4.labels; chart4.data.datasets[0].data = state.c4.data;
+  chart4.update(); persist();
+}
+function addRowC4(){ state.c4.labels.push('Novo período'); state.c4.data.push(0); renderC4();
+  chart4.data.labels=state.c4.labels; chart4.data.datasets[0].data=state.c4.data; chart4.update(); persist(); }
+function removeRowC4(i){ state.c4.labels.splice(i,1); state.c4.data.splice(i,1);
+  chart4.data.labels=state.c4.labels; chart4.data.datasets[0].data=state.c4.data; chart4.update(); renderC4(); persist(); }
+
+/* C5: bars por semestre */
+function renderC5(){
+  const tbody = document.getElementById('rows-c5'); tbody.innerHTML='';
+  state.c5.labels.forEach((lab,i)=>{
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td><input type="text" value="${lab}" oninput="setC5(${i},'labels',this.value)"></td>
+      <td><input type="number" value="${state.c5.data[i]}" oninput="setC5(${i},'data',this.value)"></td>
+      <td><button class="rm-row" onclick="removeRowC5(${i})">×</button></td>`;
+    tbody.appendChild(tr);
+  });
+}
+function setC5(i,field,val){
+  state.c5[field][i] = field==='labels'? val : Number(val);
+  chart5.data.labels = state.c5.labels; chart5.data.datasets[0].data = state.c5.data;
+  chart5.update(); persist();
+}
+function addRowC5(){ state.c5.labels.push('Novo período'); state.c5.data.push(0); renderC5();
+  chart5.data.labels=state.c5.labels; chart5.data.datasets[0].data=state.c5.data; chart5.update(); persist(); }
+function removeRowC5(i){ state.c5.labels.splice(i,1); state.c5.data.splice(i,1);
+  chart5.data.labels=state.c5.labels; chart5.data.datasets[0].data=state.c5.data; chart5.update(); renderC5(); persist(); }
+
+/* C6 / C7: horizontal category bars */
+function renderCatEditor(key, tbodyId){
+  const tbody = document.getElementById(tbodyId); tbody.innerHTML='';
+  state[key].labels.forEach((lab,i)=>{
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td><input type="text" value="${lab}" oninput="setCat('${key}',${i},'labels',this.value)"></td>
+      <td><input type="number" value="${state[key].data[i]}" oninput="setCat('${key}',${i},'data',this.value)"></td>
+      <td><button class="rm-row" onclick="removeCat('${key}',${i})">×</button></td>`;
+    tbody.appendChild(tr);
+  });
+}
+function renderC6(){ renderCatEditor('c6','rows-c6'); }
+function renderC7(){ renderCatEditor('c7','rows-c7'); }
+function chartRef(key){ return key==='c6'? chart6 : chart7; }
+function setCat(key,i,field,val){
+  state[key][field][i] = field==='labels'? val : Number(val);
+  const c = chartRef(key);
+  c.data.labels = state[key].labels; c.data.datasets[0].data = state[key].data;
+  c.update(); persist();
+}
+function addRowC6(){ state.c6.labels.push('Nova categoria'); state.c6.data.push(0); renderC6();
+  chart6.data.labels=state.c6.labels; chart6.data.datasets[0].data=state.c6.data; chart6.update(); persist(); }
+function addRowC7(){ state.c7.labels.push('Nova categoria'); state.c7.data.push(0); renderC7();
+  chart7.data.labels=state.c7.labels; chart7.data.datasets[0].data=state.c7.data; chart7.update(); persist(); }
+function removeCat(key,i){
+  state[key].labels.splice(i,1); state[key].data.splice(i,1);
+  const c = chartRef(key);
+  c.data.labels = state[key].labels; c.data.datasets[0].data = state[key].data;
+  c.update(); renderCatEditor(key, key==='c6'?'rows-c6':'rows-c7'); persist();
+}
+
+/* ---------------- Units grid ---------------- */
+function buildingIcon(){
+  return `<svg viewBox="0 0 24 24" fill="none"><path d="M4 21V6l6-3 6 3v15M14 21V11l6 2v8" stroke="${NAVY}" stroke-width="1.6" stroke-linejoin="round"/></svg>`;
+}
+function renderUnits(){
+  const grid = document.getElementById('units-grid'); grid.innerHTML='';
+  state.units.forEach((name,i)=>{
+    const div = document.createElement('div');
+    div.className='unit-item';
+    div.innerHTML = `<span class="rm-x" onclick="removeUnit(${i})">×</span>${buildingIcon()}
+      <span contenteditable="true" oninput="state.units[${i}]=this.innerText; persist()">${name}</span>
+      <span class="check">✔</span>`;
+    grid.appendChild(div);
+  });
+}
+function addUnit(){ state.units.push('Nova unidade'); renderUnits(); persist(); }
+function removeUnit(i){ state.units.splice(i,1); renderUnits(); persist(); }
+
+/* ---------------- Timeline ---------------- */
+function renderTL(year){
+  const ul = document.getElementById('tl-'+year); ul.innerHTML='';
+  state.timeline[year].forEach((item,i)=>{
+    const li = document.createElement('li');
+    li.innerHTML = `<span contenteditable="true" oninput="state.timeline['${year}'][${i}]=this.innerText; persist()">${item}</span><span class="li-x" onclick="removeTL('${year}',${i})">×</span>`;
+    ul.appendChild(li);
+  });
+}
+function renderAllTL(){ ['2024','2025','2026'].forEach(renderTL); }
+function addTL(year){ state.timeline[year].push('Novo item'); renderTL(year); persist(); }
+function removeTL(year,i){ state.timeline[year].splice(i,1); renderTL(year); persist(); }
+
+/* ---------------- Highlights ---------------- */
+function renderHighlights(){
+  const ul = document.getElementById('highlights-list'); ul.innerHTML='';
+  state.highlights.forEach((h,i)=>{
+    const li = document.createElement('li');
+    li.innerHTML = `<span class="tick">✔</span><span contenteditable="true" style="flex:1" oninput="state.highlights[${i}]=this.innerText; persist()">${h}</span><span class="li-x" onclick="removeHighlight(${i})">×</span>`;
+    ul.appendChild(li);
+  });
+}
+function addHighlight(){ state.highlights.push('Novo destaque'); renderHighlights(); persist(); }
+function removeHighlight(i){ state.highlights.splice(i,1); renderHighlights(); persist(); }
+
+/* ---------------- Free text (contenteditable) persistence ---------------- */
+let textState = {};
+function loadText(){
+  try{ const saved = localStorage.getItem(TEXT_KEY); if(saved) textState = JSON.parse(saved); }catch(e){}
+  document.querySelectorAll('[data-key]').forEach(el=>{
+    if(textState[el.dataset.key]!==undefined) el.innerText = textState[el.dataset.key];
+    el.addEventListener('input', ()=>{ textState[el.dataset.key]=el.innerText; localStorage.setItem(TEXT_KEY, JSON.stringify(textState)); });
+  });
+}
+
+/* ---------------- Global actions ---------------- */
+function saveAll(){ persist(); localStorage.setItem(TEXT_KEY, JSON.stringify(textState)); alert('Alterações salvas neste navegador.'); }
+function exportJSON(){
+  const payload = { state, textState };
+  const blob = new Blob([JSON.stringify(payload,null,2)], {type:'application/json'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob); a.download = 'dashboard-rm-dados.json'; a.click();
+}
+function importJSON(ev){
+  const file = ev.target.files[0]; if(!file) return;
+  const reader = new FileReader();
+  reader.onload = e=>{
+    try{
+      const payload = JSON.parse(e.target.result);
+      if(payload.state) state = payload.state;
+      if(payload.textState) textState = payload.textState;
+      persist(); localStorage.setItem(TEXT_KEY, JSON.stringify(textState));
+      location.reload();
+    }catch(err){ alert('Arquivo inválido.'); }
+  };
+  reader.readAsText(file);
+}
+function restoreDefaults(){
+  localStorage.removeItem(STORAGE_KEY); localStorage.removeItem(TEXT_KEY);
+  location.reload();
+}
+
+/* ---------------- Init ---------------- */
+loadText();
+initCharts();
+renderUnits();
+renderAllTL();
+renderHighlights();
+</script>
+</body>
+</html>
