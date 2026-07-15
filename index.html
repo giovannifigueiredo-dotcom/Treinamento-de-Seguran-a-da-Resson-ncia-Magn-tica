@@ -9,7 +9,6 @@
   :root{
     --navy-dark:#0a2a6b;
     --navy:#153a86;
-    --navy-2:#16337a;
     --teal:#18b7a6;
     --teal-light:#5fd7c8;
     --orange:#f0883e;
@@ -21,36 +20,21 @@
     --border:#e1e6ef;
   }
   *{box-sizing:border-box;}
-  body{
-    margin:0; font-family:'Segoe UI',Arial,sans-serif; background:var(--bg); color:var(--text);
-  }
-  [contenteditable="true"]{
-    border-radius:4px; outline-offset:2px; transition:background .15s;
-  }
+  body{ margin:0; font-family:'Segoe UI',Arial,sans-serif; background:var(--bg); color:var(--text); }
+  [contenteditable="true"]{ border-radius:4px; outline-offset:2px; transition:background .15s; }
   [contenteditable="true"]:hover{ background:rgba(24,183,166,.08); }
   [contenteditable="true"]:focus{ background:rgba(24,183,166,.15); outline:1px dashed var(--teal); }
 
-  header.top{
-    background:linear-gradient(120deg,var(--navy-dark),var(--navy));
-    color:#fff; padding:18px 26px; display:flex; align-items:center; gap:18px; flex-wrap:wrap;
-  }
-  header.top .logo{
-    width:46px;height:46px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;flex:none;
-  }
+  header.top{ background:linear-gradient(120deg,var(--navy-dark),var(--navy)); color:#fff; padding:18px 26px; display:flex; align-items:center; gap:18px; flex-wrap:wrap; }
+  header.top .logo{ width:46px;height:46px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;flex:none; }
   header.top .logo svg{width:26px;height:26px;}
   header.top .titles{flex:1; min-width:280px;}
   header.top h1{margin:0; font-size:19px; letter-spacing:.5px;}
   header.top h2{margin:2px 0 0; font-size:12px; font-weight:400; opacity:.85;}
-  header.top .datebox{
-    background:rgba(255,255,255,.12); border-radius:8px; padding:8px 14px; font-size:11px; display:flex; gap:8px; align-items:center;
-  }
+  header.top .datebox{ background:rgba(255,255,255,.12); border-radius:8px; padding:8px 14px; font-size:11px; display:flex; gap:8px; align-items:center; }
 
-  .toolbar{
-    display:flex; gap:10px; flex-wrap:wrap; padding:10px 26px; background:#fff; border-bottom:1px solid var(--border); position:sticky; top:0; z-index:20;
-  }
-  .toolbar button{
-    background:var(--navy); color:#fff; border:none; padding:8px 14px; border-radius:6px; font-size:12.5px; cursor:pointer;
-  }
+  .toolbar{ display:flex; gap:10px; flex-wrap:wrap; padding:10px 26px; background:#fff; border-bottom:1px solid var(--border); position:sticky; top:0; z-index:20; }
+  .toolbar button{ background:var(--navy); color:#fff; border:none; padding:8px 14px; border-radius:6px; font-size:12.5px; cursor:pointer; }
   .toolbar button.secondary{ background:#fff; color:var(--navy); border:1px solid var(--navy); }
   .toolbar button:hover{ opacity:.85; }
   .toolbar .hint{ font-size:12px; color:var(--muted); align-self:center; margin-left:auto;}
@@ -77,46 +61,45 @@
   .growth-item .pct{ font-size:22px; font-weight:700; color:var(--teal-light);}
   .growth-item .desc{ font-size:11px; opacity:.85; }
 
-  .grid3{ display:grid; grid-template-columns:1.1fr 1.1fr .9fr; gap:16px; margin-bottom:18px; }
-  .grid2b{ display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:18px; }
-  .grid-cat{ display:grid; grid-template-columns:1.3fr 1fr .5fr; gap:16px; margin-bottom:18px; }
-  @media(max-width:1000px){ .grid3, .grid2b, .grid-cat{ grid-template-columns:1fr; } }
+  .note{ background:#eef6f4; border:1px solid #cfe9e2; color:#1f6e5c; font-size:11.5px; border-radius:8px; padding:6px 10px; margin:0 0 10px; }
+
+  .row-top{ display:grid; grid-template-columns:1.6fr 1fr; gap:16px; margin-bottom:18px; }
+  .row-bottom{ display:grid; grid-template-columns:1fr 1.3fr .5fr; gap:16px; margin-bottom:18px; }
+  @media(max-width:1000px){ .row-top, .row-bottom{ grid-template-columns:1fr; } }
 
   .section-title{ font-size:13px; font-weight:700; color:var(--navy-dark); margin:0 0 10px; text-transform:uppercase; letter-spacing:.3px;}
-  .chart-wrap{ position:relative; height:230px; }
-  .chart-wrap.tall{ height:280px; }
+  .chart-wrap{ position:relative; height:260px; }
+  .chart-wrap.tall{ height:400px; }
+  .chart-wrap.donutwrap{ height:180px; }
 
   .edit-toggle{ float:right; font-size:11px; background:none; border:1px solid var(--border); color:var(--navy); border-radius:5px; padding:3px 8px; cursor:pointer;}
+  .sort-toggle{ float:right; font-size:11px; background:none; border:1px solid var(--border); color:var(--navy); border-radius:5px; padding:3px 8px; cursor:pointer; margin-right:6px;}
   .edit-panel{ display:none; margin-top:12px; border-top:1px dashed var(--border); padding-top:10px; }
   .edit-panel.show{ display:block; }
   .edit-panel table{ width:100%; border-collapse:collapse; font-size:12px;}
   .edit-panel th{ text-align:left; color:var(--muted); font-weight:600; padding:4px 4px;}
   .edit-panel td{ padding:3px 4px; }
-  .edit-panel input[type=text], .edit-panel input[type=number]{
-    width:100%; padding:4px 6px; border:1px solid var(--border); border-radius:4px; font-size:12px;
-  }
+  .edit-panel input[type=text], .edit-panel input[type=number]{ width:100%; padding:4px 6px; border:1px solid var(--border); border-radius:4px; font-size:12px; }
   .edit-panel .rm-row{ background:#fdecec; color:#c0392b; border:1px solid #f0c4c4; border-radius:4px; cursor:pointer; padding:2px 8px; font-size:11px;}
   .edit-panel .add-row{ margin-top:8px; background:var(--teal); color:#fff; border:none; padding:5px 12px; border-radius:5px; font-size:12px; cursor:pointer;}
 
-  .total-box{ position:absolute; right:8px; bottom:10px; background:#f2f6ee; border:1px solid #dfe8d6; border-radius:8px; padding:8px 10px; font-size:11px; max-width:150px; text-align:center; color:#3b5b2c;}
-  .total-box b{ display:block; font-size:15px; }
+  .total-box{ position:absolute; right:8px; top:8px; background:#f2f6ee; border:1px solid #dfe8d6; border-radius:8px; padding:8px 10px; font-size:11px; max-width:170px; text-align:center; color:#3b5b2c;}
+  .total-box b{ display:block; font-size:16px; }
 
-  .donut-legend{ display:flex; flex-direction:column; gap:16px; justify-content:center; height:100%; }
+  .donut-legend{ display:flex; flex-direction:column; gap:16px; justify-content:center; }
   .donut-legend .item{ display:flex; align-items:center; gap:10px; }
   .donut-legend .dot{ width:12px;height:12px;border-radius:50%; flex:none; }
   .donut-legend .num{ font-size:20px; font-weight:700; }
   .donut-legend .lab{ font-size:11px; color:var(--muted); text-transform:uppercase; }
-  .donut-total{ text-align:center; margin-bottom:14px; }
+  .donut-total{ text-align:center; margin-bottom:10px; }
   .donut-total .n{ font-size:24px; font-weight:700; color:var(--navy-dark); }
-  .donut-total .l{ font-size:11px; color:var(--muted); }
-  .donut-flex{ display:flex; gap:14px; align-items:center; height:100%;}
-  .donut-flex .chart-wrap{ flex:1; height:180px;}
+  .donut-flex{ display:flex; gap:14px; align-items:center; }
+  .donut-flex .chart-wrap{ flex:1; }
 
   .cat-badge{ display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; background:#eef4fb; border:1px solid #d6e4f6; border-radius:12px; height:100%; padding:16px 10px; gap:6px;}
   .cat-badge .num{ font-size:28px; font-weight:800; color:var(--navy);}
   .cat-badge .lab{ font-size:12px; color:var(--navy-dark); font-weight:600;}
 
-  /* Units */
   .units-grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(90px,1fr)); gap:10px; margin-top:6px; }
   .unit-item{ display:flex; flex-direction:column; align-items:center; gap:4px; font-size:11px; text-align:center; position:relative;}
   .unit-item svg{width:26px;height:26px;}
@@ -124,10 +107,9 @@
   .unit-item .rm-x{ position:absolute; top:-6px; right:6px; background:#fdecec; color:#c0392b; border-radius:50%; width:16px; height:16px; font-size:10px; line-height:16px; text-align:center; cursor:pointer; border:1px solid #f0c4c4; }
   .units-footer{ margin-top:14px; background:linear-gradient(120deg,var(--navy-dark),var(--navy)); color:#fff; text-align:center; padding:9px; border-radius:8px; font-size:13px; font-weight:600; letter-spacing:.4px; }
 
-  /* Timeline */
   .timeline{ display:grid; grid-template-columns:repeat(3,1fr); gap:18px; margin-top:10px; }
   @media(max-width:800px){ .timeline{ grid-template-columns:1fr; } }
-  .tl-col{ border-top:4px solid var(--border); padding-top:10px; position:relative;}
+  .tl-col{ border-top:4px solid var(--border); padding-top:10px; }
   .tl-col.y2024{ border-color:#33415c; }
   .tl-col.y2025{ border-color:var(--green); }
   .tl-col.y2026{ border-color:var(--teal); }
@@ -136,11 +118,9 @@
   .tl-col.y2025 .tl-year{ color:var(--green); }
   .tl-col.y2026 .tl-year{ color:var(--teal); }
   .tl-col ul{ margin:0; padding-left:16px; font-size:12.5px; line-height:1.7; }
-  .tl-col li{ position:relative; }
   .tl-add{ font-size:11px; background:none; border:1px dashed var(--border); color:var(--muted); border-radius:5px; padding:3px 8px; cursor:pointer; margin-top:6px;}
   .li-x{ font-size:10px; color:#c0392b; cursor:pointer; margin-left:6px; }
 
-  /* Highlights */
   .highlights{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:9px; }
   .highlights li{ display:flex; align-items:flex-start; gap:8px; font-size:13px; }
   .highlights li .tick{ color:var(--green); flex:none; margin-top:1px; }
@@ -176,7 +156,6 @@
 
 <main>
 
-  <!-- KPI ROW -->
   <div class="kpi-row">
     <div class="card kpi">
       <div class="icon" style="background:#e5edfb;"><svg viewBox="0 0 24 24" fill="none"><path d="M8 12a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm8 0a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM2 20c0-3 3-5 6-5s6 2 6 5M12 20c0-2.5 2.5-4.2 5-4.2s5 1.7 5 4.2" stroke="#153a86" stroke-width="1.6" stroke-linecap="round"/></svg></div>
@@ -216,7 +195,6 @@
     </div>
   </div>
 
-  <!-- GROWTH BOX -->
   <div class="growth-box">
     <h3 contenteditable="true" data-key="growth-title">CRESCIMENTO DO PROGRAMA</h3>
     <div class="growth-flex">
@@ -233,30 +211,21 @@
     </div>
   </div>
 
-  <!-- ROW 1: bar / accumulated line / donut -->
-  <div class="grid3">
+  <div class="note">📊 Tipos de gráfico ajustados às melhores práticas: <b>combo barras+linha</b> para volume por período vs. total acumulado (evita dois gráficos redundantes), <b>rosca</b> para composição de 2 partes, <b>linha com escala ajustada</b> para variação sutil de percentual, e <b>barras horizontais únicas e ordenadas</b> para o ranking de categorias (17 itens antes divididos em dois gráficos).</div>
+
+  <!-- ROW TOP: combo chart + donut -->
+  <div class="row-top">
     <div class="card">
       <button class="edit-toggle" onclick="toggleEdit('c1')">✏️ Editar dados</button>
-      <div class="section-title" contenteditable="true" data-key="c1-title">Evolução do Número de Profissionais Treinados</div>
-      <div class="chart-wrap"><canvas id="chart1"></canvas></div>
+      <div class="section-title" contenteditable="true" data-key="c1-title">Evolução de Profissionais Treinados: Pré vs. Pós, e Acumulado</div>
+      <div class="chart-wrap" style="position:relative;">
+        <canvas id="chart1"></canvas>
+        <div class="total-box"><span contenteditable="true" data-key="c1-boxtext"><b id="c1-total-display">3.387</b> treinados no período (acumulado)</span></div>
+      </div>
       <div class="edit-panel" id="edit-c1">
-        <table><thead><tr><th>Período</th><th>Pré-treinamento</th><th>Pós-treinamento</th><th></th></tr></thead>
+        <table><thead><tr><th>Período</th><th>Pré-treinamento</th><th>Pós-treinamento</th><th>Acumulado (pós)</th><th></th></tr></thead>
         <tbody id="rows-c1"></tbody></table>
         <button class="add-row" onclick="addRowC1()">+ Adicionar período</button>
-      </div>
-    </div>
-
-    <div class="card">
-      <button class="edit-toggle" onclick="toggleEdit('c2')">✏️ Editar dados</button>
-      <div class="section-title" contenteditable="true" data-key="c2-title">Evolução Acumulada de Profissionais Treinados (Pós)</div>
-      <div class="chart-wrap" style="position:relative;">
-        <canvas id="chart2"></canvas>
-        <div class="total-box"><span contenteditable="true" data-key="c2-boxtext"><b id="c2-total-display">3.387</b> profissionais treinados no período 2024 a 1º sem/2026</span></div>
-      </div>
-      <div class="edit-panel" id="edit-c2">
-        <table><thead><tr><th>Período</th><th>Acumulado</th><th></th></tr></thead>
-        <tbody id="rows-c2"></tbody></table>
-        <button class="add-row" onclick="addRowC2()">+ Adicionar período</button>
       </div>
     </div>
 
@@ -265,7 +234,7 @@
       <div class="section-title" contenteditable="true" data-key="c3-title">1ª Participação x Reciclagem</div>
       <div class="donut-total"><div class="n" id="c3-total">Total 3.387</div></div>
       <div class="donut-flex">
-        <div class="chart-wrap"><canvas id="chart3"></canvas></div>
+        <div class="chart-wrap donutwrap"><canvas id="chart3"></canvas></div>
         <div class="donut-legend">
           <div class="item"><span class="dot" style="background:var(--teal)"></span>
             <div><div class="num" id="c3-part-num">2.791</div><div class="lab" contenteditable="true" data-key="c3-part-lab">1ª Participação (<span id="c3-part-pct">82%</span>)</div></div>
@@ -285,8 +254,8 @@
     </div>
   </div>
 
-  <!-- ROW 2: aproveitamento line / bars por semestre -->
-  <div class="grid2b">
+  <!-- ROW BOTTOM: aproveitamento line + categorias ranking + badge -->
+  <div class="row-bottom">
     <div class="card">
       <button class="edit-toggle" onclick="toggleEdit('c4')">✏️ Editar dados</button>
       <div class="section-title" contenteditable="true" data-key="c4-title">Evolução do Aproveitamento (Pós)</div>
@@ -297,22 +266,10 @@
         <button class="add-row" onclick="addRowC4()">+ Adicionar período</button>
       </div>
     </div>
-    <div class="card">
-      <button class="edit-toggle" onclick="toggleEdit('c5')">✏️ Editar dados</button>
-      <div class="section-title" contenteditable="true" data-key="c5-title">Profissionais Treinados por Semestre (Pós)</div>
-      <div class="chart-wrap"><canvas id="chart5"></canvas></div>
-      <div class="edit-panel" id="edit-c5">
-        <table><thead><tr><th>Período</th><th>Valor</th><th></th></tr></thead>
-        <tbody id="rows-c5"></tbody></table>
-        <button class="add-row" onclick="addRowC5()">+ Adicionar período</button>
-      </div>
-    </div>
-  </div>
 
-  <!-- ROW 3: categorias -->
-  <div class="grid-cat">
     <div class="card">
       <button class="edit-toggle" onclick="toggleEdit('c6')">✏️ Editar dados</button>
+      <button class="sort-toggle" onclick="sortC6()">↕ Ordenar por valor</button>
       <div class="section-title" contenteditable="true" data-key="c6-title">Público Alcançado por Categoria Profissional — 1º sem/2026 (Pós)</div>
       <div class="chart-wrap tall"><canvas id="chart6"></canvas></div>
       <div class="edit-panel" id="edit-c6">
@@ -321,16 +278,7 @@
         <button class="add-row" onclick="addRowC6()">+ Adicionar categoria</button>
       </div>
     </div>
-    <div class="card">
-      <button class="edit-toggle" onclick="toggleEdit('c7')">✏️ Editar dados</button>
-      <div class="section-title" contenteditable="true" data-key="c7-title">Categorias Complementares</div>
-      <div class="chart-wrap tall"><canvas id="chart7"></canvas></div>
-      <div class="edit-panel" id="edit-c7">
-        <table><thead><tr><th>Categoria</th><th>Nº de profissionais</th><th></th></tr></thead>
-        <tbody id="rows-c7"></tbody></table>
-        <button class="add-row" onclick="addRowC7()">+ Adicionar categoria</button>
-      </div>
-    </div>
+
     <div class="card cat-badge">
       <div class="num" contenteditable="true" data-key="badge-num">22+</div>
       <div class="lab" contenteditable="true" data-key="badge-lab">categorias profissionais alcançadas</div>
@@ -338,7 +286,7 @@
   </div>
 
   <!-- BOTTOM: unidades / timeline / destaques -->
-  <div class="grid3" style="grid-template-columns:1fr 1.1fr 1fr;">
+  <div class="row-top" style="grid-template-columns:1fr 1.1fr 1fr;">
     <div class="card">
       <div class="section-title" contenteditable="true" data-key="units-title">Unidades Treinadas</div>
       <div class="units-grid" id="units-grid"></div>
@@ -385,21 +333,22 @@
 /* ---------------- Palette ---------------- */
 const NAVY = '#153a86', TEAL='#18b7a6';
 
-/* ---------------- Default state (from original report) ---------------- */
+/* ---------------- Default state (from original report, reorganized by best chart-type fit) ---------------- */
 const DEFAULTS = {
-  c1: { labels:['2024 1º SEMESTRE','2024 2º SEMESTRE','2025 1º SEMESTRE','2025 2º SEMESTRE','2026 1º SEMESTRE'],
-        pre:[100,371,786,834,1209], pos:[89,360,765,876,1297] },
-  c2: { labels:['2024 1º SEM','2024 2º SEM','2025 1º SEM','2025 2º SEM','2026 1º SEM'],
-        data:[89,449,1214,2090,3387] },
+  // Combo chart: bars (pré/pós) on primary axis + line (acumulado) on secondary axis.
+  // Best type for "period value vs. running total" -> avoids a second, redundant chart.
+  c1: { labels:['2024 1º SEM','2024 2º SEM','2025 1º SEM','2025 2º SEM','2026 1º SEM'],
+        pre:[100,371,786,834,1209], pos:[89,360,765,876,1297], acumulado:[89,449,1214,2090,3387] },
+  // Donut: correct for a 2-part composition of a whole (participação vs reciclagem).
   c3: { part:2791, recic:596 },
+  // Line: correct for a trend over time; range is intentionally tight (90-100) so the
+  // small but meaningful month-to-month variation in a % near-ceiling metric is visible.
   c4: { labels:['2024 1º SEM','2024 2º SEM','2025 1º SEM','2025 2º SEM','2026 1º SEM'],
         data:[95,97,97,98,99] },
-  c5: { labels:['2024 1º SEM','2024 2º SEM','2025 1º SEM','2025 2º SEM','2026 1º SEM'],
-        data:[89,360,765,876,1297] },
-  c6: { labels:['Higiene / Facilities','Técnico de Enfermagem','Administrativo','Enfermeiros','Manutenção','Coleta / Laboratório','Biomédicos (RM)','Médicos Anestesistas','Ultrassom'],
-        data:[289,162,130,114,101,45,49,47,42] },
-  c7: { labels:['Segurança Patrimonial','Ressonância Magnética','RX','Tomografia','Empresas Terceirizadas','Transporte','Bombeiros','Outros (diversas áreas)'],
-        data:[33,32,25,21,21,20,18,77] },
+  // Single sorted horizontal bar: best for ranking many categories by one metric.
+  // (Originally split into two separate charts; merged here into one true ranking.)
+  c6: { labels:['Higiene / Facilities','Técnico de Enfermagem','Administrativo','Enfermeiros','Manutenção','Segurança Patrimonial','Ressonância Magnética','Outros (diversas áreas)','RX','Biomédicos (RM)','Médicos Anestesistas','Tomografia','Empresas Terceirizadas','Transporte','Ultrassom','Bombeiros','Coleta / Laboratório'],
+        data:[289,162,130,114,101,33,32,77,25,49,47,21,21,20,42,18,45] },
   units: Array.from({length:14},(_,i)=>'Unidade '+(i+1)),
   timeline: {
     '2024':['Implementação do programa','Padronização dos conteúdos','Avaliação pré e pós','Primeiras unidades'],
@@ -416,41 +365,36 @@ const DEFAULTS = {
   ]
 };
 
-const STORAGE_KEY = 'rm_dashboard_state_v1';
-const TEXT_KEY = 'rm_dashboard_text_v1';
+const STORAGE_KEY = 'rm_dashboard_state_v2';
+const TEXT_KEY = 'rm_dashboard_text_v2';
 let state = JSON.parse(JSON.stringify(DEFAULTS));
 
 function loadState(){
-  try{
-    const saved = localStorage.getItem(STORAGE_KEY);
-    if(saved) state = JSON.parse(saved);
-  }catch(e){ console.warn('Falha ao carregar estado salvo', e); }
+  try{ const saved = localStorage.getItem(STORAGE_KEY); if(saved) state = JSON.parse(saved); }
+  catch(e){ console.warn('Falha ao carregar estado salvo', e); }
 }
 loadState();
-
-function persist(){
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-}
+function persist(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
 
 /* ---------------- Charts ---------------- */
-let chart1, chart2, chart3, chart4, chart5, chart6, chart7;
+let chart1, chart3, chart4, chart6;
 
 function initCharts(){
   chart1 = new Chart(document.getElementById('chart1'), {
-    type:'bar',
-    data:{ labels: state.c1.labels.map(l=>l.split(' ')), datasets:[
-      {label:'Pré-treinamento', data:state.c1.pre, backgroundColor:NAVY, borderRadius:3},
-      {label:'Pós-treinamento', data:state.c1.pos, backgroundColor:TEAL, borderRadius:3}
+    data:{ labels: state.c1.labels, datasets:[
+      { type:'bar', label:'Pré-treinamento', data:state.c1.pre, backgroundColor:NAVY, borderRadius:3, yAxisID:'y' },
+      { type:'bar', label:'Pós-treinamento', data:state.c1.pos, backgroundColor:TEAL, borderRadius:3, yAxisID:'y' },
+      { type:'line', label:'Acumulado (pós)', data:state.c1.acumulado, borderColor:'#5b8c3a', backgroundColor:'#5b8c3a', tension:.3, yAxisID:'y1', pointRadius:3 }
     ]},
-    options: baseOpts({legendTop:true})
-  });
-
-  chart2 = new Chart(document.getElementById('chart2'), {
-    type:'line',
-    data:{ labels: state.c2.labels, datasets:[
-      { label:'Acumulado', data: state.c2.data, borderColor:'#5b8c3a', backgroundColor:'rgba(150,190,110,.15)', fill:true, tension:.3, pointBackgroundColor:'#5b8c3a' }
-    ]},
-    options: baseOpts({legendTop:false})
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      plugins:{ legend:{ display:true, position:'top', labels:{boxWidth:12,font:{size:10}} } },
+      scales:{
+        x:{ ticks:{font:{size:9}}, grid:{display:false} },
+        y:{ type:'linear', position:'left', beginAtZero:true, ticks:{font:{size:9}}, title:{display:true,text:'Por período',font:{size:9}} },
+        y1:{ type:'linear', position:'right', beginAtZero:true, grid:{drawOnChartArea:false}, ticks:{font:{size:9}}, title:{display:true,text:'Acumulado',font:{size:9}} }
+      }
+    }
   });
 
   chart3 = new Chart(document.getElementById('chart3'), {
@@ -462,50 +406,26 @@ function initCharts(){
   chart4 = new Chart(document.getElementById('chart4'), {
     type:'line',
     data:{ labels: state.c4.labels, datasets:[
-      { label:'Aproveitamento %', data: state.c4.data, borderColor:TEAL, backgroundColor:'rgba(24,183,166,.15)', fill:false, tension:.3, pointBackgroundColor:TEAL }
+      { label:'Aproveitamento %', data: state.c4.data, borderColor:TEAL, backgroundColor:'rgba(24,183,166,.15)', fill:true, tension:.3, pointBackgroundColor:TEAL }
     ]},
-    options: baseOpts({legendTop:false, suggestedMin:60, suggestedMax:110, percent:true})
-  });
-
-  chart5 = new Chart(document.getElementById('chart5'), {
-    type:'bar',
-    data:{ labels: state.c5.labels, datasets:[{ label:'Profissionais', data: state.c5.data, backgroundColor:TEAL, borderRadius:3 }]},
-    options: baseOpts({legendTop:false})
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      plugins:{ legend:{display:false} },
+      scales:{ x:{ ticks:{font:{size:9}}, grid:{display:false} }, y:{ suggestedMin:90, suggestedMax:100, ticks:{font:{size:9}, callback:v=>v+'%'} } }
+    }
   });
 
   chart6 = new Chart(document.getElementById('chart6'), {
     type:'bar',
     data:{ labels: state.c6.labels, datasets:[{ label:'Profissionais', data: state.c6.data, backgroundColor:NAVY, borderRadius:3 }]},
-    options: horizOpts()
-  });
-
-  chart7 = new Chart(document.getElementById('chart7'), {
-    type:'bar',
-    data:{ labels: state.c7.labels, datasets:[{ label:'Profissionais', data: state.c7.data, backgroundColor:NAVY, borderRadius:3 }]},
-    options: horizOpts()
+    options:{ indexAxis:'y', responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}},
+      scales:{ x:{ beginAtZero:true, ticks:{font:{size:9}} }, y:{ ticks:{font:{size:10}} } } }
   });
 
   updateC3Legend();
-  document.getElementById('c2-total-display').innerText = formatBR(state.c2.data[state.c2.data.length-1]);
+  document.getElementById('c1-total-display').innerText = formatBR(state.c1.acumulado[state.c1.acumulado.length-1]);
 }
 
-function baseOpts({legendTop=false, suggestedMin, suggestedMax, percent=false}={}){
-  return {
-    responsive:true, maintainAspectRatio:false,
-    plugins:{ legend:{ display:legendTop, position:'top', labels:{boxWidth:12,font:{size:10}} } },
-    scales:{
-      x:{ ticks:{font:{size:9}}, grid:{display:false} },
-      y:{ beginAtZero:true, suggestedMin, suggestedMax, ticks:{ font:{size:9}, callback:v=>percent? v+'%':v } }
-    }
-  };
-}
-function horizOpts(){
-  return {
-    indexAxis:'y', responsive:true, maintainAspectRatio:false,
-    plugins:{legend:{display:false}},
-    scales:{ x:{ beginAtZero:true, ticks:{font:{size:9}} }, y:{ ticks:{font:{size:10}} } }
-  };
-}
 function formatBR(n){ return Number(n).toLocaleString('pt-BR'); }
 
 /* ---------------- Edit panels ---------------- */
@@ -514,18 +434,14 @@ function toggleEdit(key){
   panel.classList.toggle('show');
   if(panel.classList.contains('show')) renderRows(key);
 }
-
 function renderRows(key){
   if(key==='c1') return renderC1();
-  if(key==='c2') return renderC2();
   if(key==='c3') return renderC3Inputs();
   if(key==='c4') return renderC4();
-  if(key==='c5') return renderC5();
   if(key==='c6') return renderC6();
-  if(key==='c7') return renderC7();
 }
 
-/* C1: grouped bar */
+/* C1: combo bars + line */
 function renderC1(){
   const tbody = document.getElementById('rows-c1'); tbody.innerHTML='';
   state.c1.labels.forEach((lab,i)=>{
@@ -533,57 +449,32 @@ function renderC1(){
     tr.innerHTML = `<td><input type="text" value="${lab}" oninput="setC1(${i},'labels',this.value)"></td>
       <td><input type="number" value="${state.c1.pre[i]}" oninput="setC1(${i},'pre',this.value)"></td>
       <td><input type="number" value="${state.c1.pos[i]}" oninput="setC1(${i},'pos',this.value)"></td>
+      <td><input type="number" value="${state.c1.acumulado[i]}" oninput="setC1(${i},'acumulado',this.value)"></td>
       <td><button class="rm-row" onclick="removeRowC1(${i})">×</button></td>`;
     tbody.appendChild(tr);
   });
 }
 function setC1(i,field,val){
   state.c1[field][i] = field==='labels'? val : Number(val);
-  chart1.data.labels = state.c1.labels.map(l=>l.split(' '));
+  chart1.data.labels = state.c1.labels;
   chart1.data.datasets[0].data = state.c1.pre;
   chart1.data.datasets[1].data = state.c1.pos;
-  chart1.update(); persist();
-}
-function addRowC1(){
-  state.c1.labels.push('Novo período'); state.c1.pre.push(0); state.c1.pos.push(0);
-  setC1(0,'labels',state.c1.labels[0]); renderC1(); persist();
-}
-function removeRowC1(i){
-  state.c1.labels.splice(i,1); state.c1.pre.splice(i,1); state.c1.pos.splice(i,1);
-  chart1.data.labels = state.c1.labels.map(l=>l.split(' '));
-  chart1.data.datasets[0].data = state.c1.pre;
-  chart1.data.datasets[1].data = state.c1.pos;
-  chart1.update(); renderC1(); persist();
-}
-
-/* C2: accumulated line */
-function renderC2(){
-  const tbody = document.getElementById('rows-c2'); tbody.innerHTML='';
-  state.c2.labels.forEach((lab,i)=>{
-    const tr = document.createElement('tr');
-    tr.innerHTML = `<td><input type="text" value="${lab}" oninput="setC2(${i},'labels',this.value)"></td>
-      <td><input type="number" value="${state.c2.data[i]}" oninput="setC2(${i},'data',this.value)"></td>
-      <td><button class="rm-row" onclick="removeRowC2(${i})">×</button></td>`;
-    tbody.appendChild(tr);
-  });
-}
-function setC2(i,field,val){
-  state.c2[field][i] = field==='labels'? val : Number(val);
-  chart2.data.labels = state.c2.labels;
-  chart2.data.datasets[0].data = state.c2.data;
-  chart2.update();
-  document.getElementById('c2-total-display').innerText = formatBR(state.c2.data[state.c2.data.length-1]);
+  chart1.data.datasets[2].data = state.c1.acumulado;
+  chart1.update();
+  document.getElementById('c1-total-display').innerText = formatBR(state.c1.acumulado[state.c1.acumulado.length-1]);
   persist();
 }
-function addRowC2(){
-  state.c2.labels.push('Novo período'); state.c2.data.push(0);
-  renderC2(); chart2.data.labels=state.c2.labels; chart2.data.datasets[0].data=state.c2.data; chart2.update(); persist();
+function addRowC1(){
+  state.c1.labels.push('Novo período'); state.c1.pre.push(0); state.c1.pos.push(0); state.c1.acumulado.push(0);
+  renderC1(); chart1.data.labels=state.c1.labels; chart1.data.datasets[0].data=state.c1.pre;
+  chart1.data.datasets[1].data=state.c1.pos; chart1.data.datasets[2].data=state.c1.acumulado; chart1.update(); persist();
 }
-function removeRowC2(i){
-  state.c2.labels.splice(i,1); state.c2.data.splice(i,1);
-  chart2.data.labels=state.c2.labels; chart2.data.datasets[0].data=state.c2.data; chart2.update();
-  document.getElementById('c2-total-display').innerText = formatBR(state.c2.data[state.c2.data.length-1]||0);
-  renderC2(); persist();
+function removeRowC1(i){
+  state.c1.labels.splice(i,1); state.c1.pre.splice(i,1); state.c1.pos.splice(i,1); state.c1.acumulado.splice(i,1);
+  chart1.data.labels=state.c1.labels; chart1.data.datasets[0].data=state.c1.pre;
+  chart1.data.datasets[1].data=state.c1.pos; chart1.data.datasets[2].data=state.c1.acumulado; chart1.update();
+  document.getElementById('c1-total-display').innerText = formatBR(state.c1.acumulado[state.c1.acumulado.length-1]||0);
+  renderC1(); persist();
 }
 
 /* C3: donut */
@@ -595,8 +486,7 @@ function updateC3(){
   state.c3.part = Number(document.getElementById('in-c3-part').value)||0;
   state.c3.recic = Number(document.getElementById('in-c3-recic').value)||0;
   chart3.data.datasets[0].data = [state.c3.part, state.c3.recic];
-  chart3.update();
-  updateC3Legend(); persist();
+  chart3.update(); updateC3Legend(); persist();
 }
 function updateC3Legend(){
   const total = state.c3.part + state.c3.recic;
@@ -628,56 +518,36 @@ function addRowC4(){ state.c4.labels.push('Novo período'); state.c4.data.push(0
 function removeRowC4(i){ state.c4.labels.splice(i,1); state.c4.data.splice(i,1);
   chart4.data.labels=state.c4.labels; chart4.data.datasets[0].data=state.c4.data; chart4.update(); renderC4(); persist(); }
 
-/* C5: bars por semestre */
-function renderC5(){
-  const tbody = document.getElementById('rows-c5'); tbody.innerHTML='';
-  state.c5.labels.forEach((lab,i)=>{
+/* C6: single sorted ranking bar (merged categories) */
+function renderC6(){
+  const tbody = document.getElementById('rows-c6'); tbody.innerHTML='';
+  state.c6.labels.forEach((lab,i)=>{
     const tr = document.createElement('tr');
-    tr.innerHTML = `<td><input type="text" value="${lab}" oninput="setC5(${i},'labels',this.value)"></td>
-      <td><input type="number" value="${state.c5.data[i]}" oninput="setC5(${i},'data',this.value)"></td>
-      <td><button class="rm-row" onclick="removeRowC5(${i})">×</button></td>`;
+    tr.innerHTML = `<td><input type="text" value="${lab}" oninput="setC6(${i},'labels',this.value)"></td>
+      <td><input type="number" value="${state.c6.data[i]}" oninput="setC6(${i},'data',this.value)"></td>
+      <td><button class="rm-row" onclick="removeRowC6(${i})">×</button></td>`;
     tbody.appendChild(tr);
   });
 }
-function setC5(i,field,val){
-  state.c5[field][i] = field==='labels'? val : Number(val);
-  chart5.data.labels = state.c5.labels; chart5.data.datasets[0].data = state.c5.data;
-  chart5.update(); persist();
-}
-function addRowC5(){ state.c5.labels.push('Novo período'); state.c5.data.push(0); renderC5();
-  chart5.data.labels=state.c5.labels; chart5.data.datasets[0].data=state.c5.data; chart5.update(); persist(); }
-function removeRowC5(i){ state.c5.labels.splice(i,1); state.c5.data.splice(i,1);
-  chart5.data.labels=state.c5.labels; chart5.data.datasets[0].data=state.c5.data; chart5.update(); renderC5(); persist(); }
-
-/* C6 / C7: horizontal category bars */
-function renderCatEditor(key, tbodyId){
-  const tbody = document.getElementById(tbodyId); tbody.innerHTML='';
-  state[key].labels.forEach((lab,i)=>{
-    const tr = document.createElement('tr');
-    tr.innerHTML = `<td><input type="text" value="${lab}" oninput="setCat('${key}',${i},'labels',this.value)"></td>
-      <td><input type="number" value="${state[key].data[i]}" oninput="setCat('${key}',${i},'data',this.value)"></td>
-      <td><button class="rm-row" onclick="removeCat('${key}',${i})">×</button></td>`;
-    tbody.appendChild(tr);
-  });
-}
-function renderC6(){ renderCatEditor('c6','rows-c6'); }
-function renderC7(){ renderCatEditor('c7','rows-c7'); }
-function chartRef(key){ return key==='c6'? chart6 : chart7; }
-function setCat(key,i,field,val){
-  state[key][field][i] = field==='labels'? val : Number(val);
-  const c = chartRef(key);
-  c.data.labels = state[key].labels; c.data.datasets[0].data = state[key].data;
-  c.update(); persist();
+function setC6(i,field,val){
+  state.c6[field][i] = field==='labels'? val : Number(val);
+  chart6.data.labels = state.c6.labels; chart6.data.datasets[0].data = state.c6.data;
+  chart6.update(); persist();
 }
 function addRowC6(){ state.c6.labels.push('Nova categoria'); state.c6.data.push(0); renderC6();
   chart6.data.labels=state.c6.labels; chart6.data.datasets[0].data=state.c6.data; chart6.update(); persist(); }
-function addRowC7(){ state.c7.labels.push('Nova categoria'); state.c7.data.push(0); renderC7();
-  chart7.data.labels=state.c7.labels; chart7.data.datasets[0].data=state.c7.data; chart7.update(); persist(); }
-function removeCat(key,i){
-  state[key].labels.splice(i,1); state[key].data.splice(i,1);
-  const c = chartRef(key);
-  c.data.labels = state[key].labels; c.data.datasets[0].data = state[key].data;
-  c.update(); renderCatEditor(key, key==='c6'?'rows-c6':'rows-c7'); persist();
+function removeRowC6(i){ state.c6.labels.splice(i,1); state.c6.data.splice(i,1);
+  chart6.data.labels=state.c6.labels; chart6.data.datasets[0].data=state.c6.data; chart6.update(); renderC6(); persist(); }
+function sortC6(){
+  const combined = state.c6.labels.map((l,i)=>({l, v:state.c6.data[i]}));
+  combined.sort((a,b)=>b.v-a.v);
+  state.c6.labels = combined.map(c=>c.l);
+  state.c6.data = combined.map(c=>c.v);
+  chart6.data.labels = state.c6.labels; chart6.data.datasets[0].data = state.c6.data;
+  chart6.update();
+  const panel = document.getElementById('edit-c6');
+  if(panel.classList.contains('show')) renderC6();
+  persist();
 }
 
 /* ---------------- Units grid ---------------- */
